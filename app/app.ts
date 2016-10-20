@@ -3,7 +3,6 @@ import {Platform, ionicBootstrap} from "ionic-angular";
 import {StatusBar} from "ionic-native";
 import {LoginPage} from "./pages/login/login";
 import {HTTP_PROVIDERS} from "@angular/http";
-import {LoginService} from "./services/app.login.service";
 import {FORM_PROVIDERS, provideForms} from "@angular/forms";
 
 @Component({
@@ -21,4 +20,4 @@ export class MyApp {
   }
 }
 
-ionicBootstrap(MyApp,[HTTP_PROVIDERS,LoginService,FORM_PROVIDERS,provideForms()]);
+ionicBootstrap(MyApp,[HTTP_PROVIDERS, FORM_PROVIDERS, provideForms()]);
