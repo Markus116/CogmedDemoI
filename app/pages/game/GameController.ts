@@ -9,7 +9,7 @@ export class GameController {
 
   public generateSequence():Array<number> {
     let sequence:Array<number> = [];
-    for (let i:number = 0; i < GameModel.instance.currentLevelNumber; i++){
+    for (let i:number = 0; i < GameModel.instance.currentLevel; i++){
       let element:number;
       do{
         element = Math.floor(Math.random()*GameModel.instance.numOfItems);
@@ -26,12 +26,25 @@ export class GameController {
     return true;
   }
 
-  public increaseLevelIfCorrect():void{
+  public updateScore():void{
     if(GameModel.instance.trialIsCorrect) {
-      GameModel.instance.currentLevelNumber++;
-      console.log('increase level');
+      let level:number = GameModel.instance.currentLevel;
+      GameModel.instance.currentScore += 0.33;
+      console.log('increase score');
+      if (GameModel.instance.currentLevel > level) GameModel.instance.currentScore += 0.17;
+    }
+    else if(GameModel.instance.currentScore > GameModel.MIN_LEVEL){
+      GameModel.instance.currentScore -= 0.17*GameModel.instance.firstOrLastFaultCount;
+      if(GameModel.instance.faultCount - GameModel.instance.firstOrLastFaultCount > 2){
+        GameModel.instance.currentScore -= 0.5;
+      }
+      else if(GameModel.instance.faultCount - GameModel.instance.firstOrLastFaultCount == 2){
+        GameModel.instance.currentScore -= 0.33;
+      }
     }
     GameModel.instance.trialIsCorrect = true;
+    GameModel.instance.faultCount = 0;
+    GameModel.instance.firstOrLastFaultCount = 0;
     GameModel.instance.currentItem = 0;
   }
 
@@ -44,7 +57,7 @@ export class GameController {
   }
 
   public executeStimuli():void {
-    console.log("GameModel.instance.currentLevelNumber", GameModel.instance.currentLevelNumber);
+    //console.log("GameModel.instance.currentLevelNumber", GameModel.instance.currentLevel);
     GameModel.instance.itemSequence = GameController.instance.generateSequence();
     for(let i:number = 0; i < GameModel.instance.itemSequence.length; i++){
       GameModel.timeOuts.push(setTimeout(function(){GameItemsManager.instance.interactiveItems[GameModel.instance.itemSequence[i]].highlight();}, i*2000 + 1000));
@@ -56,18 +69,41 @@ export class GameController {
 
   public processTrial(event:any):void{
     console.log('processTrial');
+
     if(!GameModel.instance.isTrialCorrect()){
       console.log('trial is not correct');
-      GameModel.instance.trialIsCorrect = false;
+      GameModel.instance.trialIsCorrect = false; //DoubleCheck wrong first or last against prod
+      if(!GameModel.instance.itemIsInTheSequence() || GameModel.instance.itemWasClicked()){ //BUG: If item is in sequence you can press it unlimited times and get no error //Here
+        GameModel.instance.faultCount++;
+        if(GameModel.instance.clicksCount == 0 || GameModel.instance.clicksCount == GameModel.instance.itemSequence.length - 2) {
+          GameModel.instance.firstOrLastFaultCount++;
+          //console.log("GameModel.instance.firstOrLastFaultCount", GameModel.instance.firstOrLastFaultCount);
+        }
+        //console.log("GameModel.instance.firstOrLastFaultCount", GameModel.instance.firstOrLastFaultCount);
+        //console.log("GameModel.instance.faultCount", GameModel.instance.faultCount);
+      }
+      /*else if(GameModel.instance.itemWasClicked()){
+        GameModel.instance.faultCount++;
+      }*/
     }
+    GameModel.instance.clickedItems.push(GameModel.clickedItem);
     GameModel.instance.currentItem++;
+    GameModel.instance.clicksCount++;
     if (GameModel.instance.isTrialOver()){
       console.log('next trial');
       GameItemsManager.instance.turnItemsOff();
-      GameController.instance.increaseLevelIfCorrect();
-      GameModel.timeOuts.push(setTimeout(function(){
-        GameController.instance.executeStimuli();
-      }, 1000));
+      GameController.instance.updateScore();
+      GameItemsManager.instance.target.view.dispatchEvent(new Event('updateMeters'));
+      GameModel.instance.clickedItems = [];
+      if (GameModel.instance.shouldContinueGame()){
+        GameModel.timeOuts.push(setTimeout(function(){
+          GameController.instance.executeStimuli();
+        }, 1000));
+      }
+      else {
+        console.log("End of the exercise");
+        GameItemsManager.instance.target.view.dispatchEvent(new Event('navigateToLogin'));
+      }
     }
   }
 }

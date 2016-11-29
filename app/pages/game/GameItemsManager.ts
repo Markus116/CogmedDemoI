@@ -31,7 +31,7 @@ export class GameItemsManager extends PIXI.InteractionManager {
     {
       var item = this.interactiveItems[i];
 
-      if(item.mouseover /*&& event.buttons == 0*/)
+      if(item.mouseover)
       {
         item.__hit = this.hitTest(item, this.mouse);
         if(item.__hit)
@@ -50,10 +50,13 @@ export class GameItemsManager extends PIXI.InteractionManager {
 
   public turnItemsOn():void{
     console.log("turnItemsOn");
-    for(let i:number = 0; i < this.interactiveItems.length; i++){
-      this.interactiveItems[i].registerEvents();
-    }
-    this.target.view.addEventListener('mousedown', GamePage.clickHandler, true);
+    let scope:any = this;
+    setTimeout(function(){
+      for(let i:number = 0; i < scope.interactiveItems.length; i++){
+        scope.interactiveItems[i].registerEvents();
+      }
+      scope.target.view.addEventListener('mousedown', GamePage.clickHandler, true);
+    }, 1000);
     this.target.view.dispatchEvent(new Event('switchItemsState'));
   }
 
@@ -74,9 +77,9 @@ export class GameItemsManager extends PIXI.InteractionManager {
 
   protected createBackground(imagePath:string):PIXI.Sprite {
     let background:PIXI.Sprite = new PIXI.Sprite(PIXI.Texture.fromImage(imagePath));
-    background.position.x = -220;
-    background.position.y = -10;
-    GamePage.stage.addChild(background);
+    background.position.x = -150;
+    background.position.y = 0;
+    GamePage.stageContainer.addChild(background);
     return background;
   }
 
@@ -91,11 +94,11 @@ export class GameItemsManager extends PIXI.InteractionManager {
       for (let j: number = 0; j < GameModel.instance.numOfItems/4; j++) {
         let offsetY: number = j * 115;
         let gameItem: GameItem = new GameItem();
-        gameItem.position.x = 70 + offsetX;
-        gameItem.position.y = 70 + offsetY;
+        gameItem.position.x = 140 + offsetX;
+        gameItem.position.y = 80 + offsetY;
         gameItem.id = this.interactiveItems.length;
         this.interactiveItems.push(gameItem);
-        GamePage.stage.addChild(gameItem);
+        GamePage.stageContainer.addChild(gameItem);
       }
     }
   }

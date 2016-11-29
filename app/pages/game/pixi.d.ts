@@ -176,6 +176,17 @@ export declare module PIXI
 
 	}
 
+  export class Text extends Sprite
+  {
+    constructor(text:string, style?:any);
+
+    text:string;
+    style:any;
+
+    setText(text:string):void;
+    setStyle(style:any):void;
+  }
+
 
 
 	export class SpriteSheetLoader extends EventTarget

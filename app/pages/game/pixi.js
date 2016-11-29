@@ -567,7 +567,7 @@ PIXI.blendModes.SCREEN = 1;
 @param texture {Texture}
 @type String
 */
-PIXI.Sprite = function(texture)   //Here
+PIXI.Sprite = function(texture)
 {
 	PIXI.DisplayObjectContainer.call( this );
 
