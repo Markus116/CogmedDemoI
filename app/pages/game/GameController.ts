@@ -72,19 +72,15 @@ export class GameController {
 
     if(!GameModel.instance.isTrialCorrect()){
       console.log('trial is not correct');
-      GameModel.instance.trialIsCorrect = false; //DoubleCheck wrong first or last against prod
-      if(!GameModel.instance.itemIsInTheSequence() || GameModel.instance.itemWasClicked()){ //BUG: If item is in sequence you can press it unlimited times and get no error //Here
+      GameModel.instance.trialIsCorrect = false;
+      if(!GameModel.instance.itemIsInTheSequence() || GameModel.instance.itemWasClicked()){
         GameModel.instance.faultCount++;
-        if(GameModel.instance.clicksCount == 0 || GameModel.instance.clicksCount == GameModel.instance.itemSequence.length - 2) {
+        console.log("GameModel.instance.clickedItems.length", GameModel.instance.clickedItems.length);
+        console.log("GameModel.instance.itemSequence.length", GameModel.instance.itemSequence.length);
+        if(GameModel.instance.clickedItems.length == 0 || GameModel.instance.clickedItems.length == GameModel.instance.itemSequence.length - 1) {
           GameModel.instance.firstOrLastFaultCount++;
-          //console.log("GameModel.instance.firstOrLastFaultCount", GameModel.instance.firstOrLastFaultCount);
         }
-        //console.log("GameModel.instance.firstOrLastFaultCount", GameModel.instance.firstOrLastFaultCount);
-        //console.log("GameModel.instance.faultCount", GameModel.instance.faultCount);
       }
-      /*else if(GameModel.instance.itemWasClicked()){
-        GameModel.instance.faultCount++;
-      }*/
     }
     GameModel.instance.clickedItems.push(GameModel.clickedItem);
     GameModel.instance.currentItem++;

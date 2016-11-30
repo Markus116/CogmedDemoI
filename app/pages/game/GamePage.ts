@@ -40,7 +40,7 @@ export class GamePage {
   };
 
   public static updateMetersHandler(event:any):void{
-    if(GameModel.instance.currentLevel >= 4){    //Has to be >4 //For the experiment can be -1
+    if(GameModel.instance.currentLevel >= 4){
       if(GameModel.instance.currentLevel >= GamePage.maxDisplayedNumber){
         GamePage.maxDisplayedNumber = GameModel.instance.currentLevel + 1;
         console.log("Adding the element to the progressMeterScale");
@@ -109,7 +109,7 @@ export class GamePage {
 
     GamePage.stageContainer.addChild(GamePage.overlay);
     GamePage.scoreText.setText("Current score: " + GameModel.instance.currentScore);
-    //GamePage.scoreText.visible = false;
+    GamePage.scoreText.visible = false;
     GamePage.stageContainer.addChild(GamePage.scoreText);
     GamePage.yourTurnText.setText("YOUR TURN !");
     GamePage.yourTurnText.position = new PIXI.Point((GamePage.overlay.width - 100)/2, (GamePage.overlay.height - 50)/2);
