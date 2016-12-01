@@ -109,7 +109,7 @@ export class GamePage {
 
     GamePage.stageContainer.addChild(GamePage.overlay);
     GamePage.scoreText.setText("Current score: " + GameModel.instance.currentScore);
-    GamePage.scoreText.visible = false;
+    //GamePage.scoreText.visible = false; //ScoreText is for debug purpose
     GamePage.stageContainer.addChild(GamePage.scoreText);
     GamePage.yourTurnText.setText("YOUR TURN !");
     GamePage.yourTurnText.position = new PIXI.Point((GamePage.overlay.width - 100)/2, (GamePage.overlay.height - 50)/2);
