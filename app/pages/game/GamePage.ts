@@ -156,6 +156,7 @@ export class GamePage {
     console.log('ionViewWillLeave');
     GameController.clearAllTimeOuts();
     GamePage.renderer.view.removeEventListener('mousedown', GamePage.clickHandler, true);
+    GamePage.renderer.view.removeEventListener('touchstart', GamePage.clickHandler, true);
     GamePage.renderer.view.removeEventListener('switchItemsState', GamePage.switchOverlay, true);
     GamePage.renderer.view.removeEventListener('navigateToLogin', GamePage.navigateToLogin, true);
     GamePage.renderer.view.removeEventListener('updateMeters', GamePage.updateMetersHandler, true);

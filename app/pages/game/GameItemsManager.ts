@@ -56,6 +56,7 @@ export class GameItemsManager extends PIXI.InteractionManager {
         scope.interactiveItems[i].registerEvents();
       }
       scope.target.view.addEventListener('mousedown', GamePage.clickHandler, true);
+      scope.target.view.addEventListener('touchstart', GamePage.clickHandler, true);
     }, 1000);
     this.target.view.dispatchEvent(new Event('switchItemsState'));
   }
@@ -63,6 +64,7 @@ export class GameItemsManager extends PIXI.InteractionManager {
   public turnItemsOff(delay:number = 1000):void{
     console.log("turnItemsOff delay", delay);
     this.target.view.removeEventListener('mousedown', GamePage.clickHandler, true);
+    this.target.view.removeEventListener('touchstart', GamePage.clickHandler, true);
     let scope:any = this;
     for(let i:number = 0; i < this.interactiveItems.length; i++){
       GameModel.timeOuts.push(setTimeout(function():void{
