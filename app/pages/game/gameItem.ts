@@ -30,21 +30,21 @@ export class GameItem extends PIXI.Sprite {
     // set the mouseover callback..
     this.mouseover = function (data) {
       //console.log('mouseover');
-      this.setTexture(this.overState)
+      if (this.texture == this. upState) this.setTexture(this.overState);
     };
 
     // set the mouseout callback..
     this.mouseout = function (data) {
       //console.log('mouseout');
-      this.setTexture(this.upState)
+      this.setTexture(this.upState);
     };
   }
 
   public clearEvents() {
     // clear the mousedown and touchstart callback..
-    this.mousedown = null;
+    this.mousedown = this.touchstart = null;
     // clear the mouseup and touchend callback..
-    this.mouseup = null;
+    this.mouseup = this.touchend = null;
     // clear the mouseover callback..
     this.mouseover = null;
     // clear the mouseout callback..
@@ -58,14 +58,14 @@ export class GameItem extends PIXI.Sprite {
   public id:number = -1;
 
   public static upStateTexture:PIXI.Texture = PIXI.Texture.fromImage('assets/circle01.png');
-  public static downStateTexture:PIXI.Texture = PIXI.Texture.fromImage('assets/circle02.png');
-  public static overStateTexture:PIXI.Texture = PIXI.Texture.fromImage('assets/circle03.png');
+  public static downStateTexture:PIXI.Texture = PIXI.Texture.fromImage('assets/circle03.png');
+  public static overStateTexture:PIXI.Texture = PIXI.Texture.fromImage('assets/circle02.png');
 
   public static timeOuts:Array<number> = [];
 
   public highlight():void {
     let scope:any = this;
-    if (scope) scope.setTexture(scope.overState);
+    if (scope) scope.setTexture(scope.downState);
     GameItem.timeOuts.push(setTimeout(function(){scope.setTexture(scope.upState);}, 1000));
   }
 
