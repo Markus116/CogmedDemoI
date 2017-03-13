@@ -42,6 +42,7 @@ export class GameController {
         GameModel.instance.currentScore -= 0.33;
       }
     }
+    GameModel.instance.currentScore = Math.max(GameModel.instance.currentScore, GameModel.MIN_LEVEL);
     GameModel.instance.trialIsCorrect = true;
     GameModel.instance.faultCount = 0;
     GameModel.instance.firstOrLastFaultCount = 0;
