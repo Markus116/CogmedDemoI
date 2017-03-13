@@ -172,6 +172,7 @@ export declare module PIXI
 		click:( event:InteractionData )=>void;
 		touchstart:( event:InteractionData  )=>void;
 		touchend:( event:InteractionData )=>void;
+    touchmove:( event:InteractionData )=>void;
 		tap:( event:InteractionData )=>void;
 
 	}

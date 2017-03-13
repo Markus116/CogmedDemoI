@@ -34,7 +34,7 @@ export class GameItem extends PIXI.Sprite {
     };
 
     // set the mouseout callback..
-    this.mouseout = function (data) {
+    this.mouseout = this.touchmove = function (data) {
       //console.log('mouseout');
       this.setTexture(this.upState);
     };
@@ -48,7 +48,7 @@ export class GameItem extends PIXI.Sprite {
     // clear the mouseover callback..
     this.mouseover = null;
     // clear the mouseout callback..
-    this.mouseout = null;
+    this.mouseout = this.touchmove = null;
   }
 
   private upState:PIXI.Texture;
