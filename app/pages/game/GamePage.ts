@@ -18,7 +18,7 @@ export class GamePage {
   private static adjustDimensions():void{
     let minValue:any = 0.8*Math.min(window.innerWidth, window.innerHeight);
     GamePage.renderer.resize(minValue, minValue);
-    GamePage.stageContainer.scale = new PIXI.Point(minValue/650, minValue/650);
+    GamePage.stageContainer.scale = new PIXI.Point(minValue/STAGE_SCALE, minValue/STAGE_SCALE);
   }
 
   public static onResize(event:any):void{
@@ -39,7 +39,7 @@ export class GamePage {
     if(GamePage.scoreText.visible) {GamePage.scoreText.setText("Current score: " + GameModel.instance.currentScore);}
   };
 
-  public static updateMetersHandler(event:any):void{
+  public static updateMetersHandler(event:any):void{ //Here
     if(GameModel.instance.currentLevel >= 4){
       if(GameModel.instance.currentLevel >= GamePage.maxDisplayedNumber){
         GamePage.maxDisplayedNumber = GameModel.instance.currentLevel + 1;
@@ -63,11 +63,11 @@ export class GamePage {
       }
 
       Scale.updateMeterScale(GamePage.scoreScale.progressMeterScale,  GamePage.scoreScale.progressMeterScale[1].position.x,
-        345 - 315 * (GameModel.instance.currentLevel + 1 - GamePage.minDisplayedNumber + 1)/(GamePage.maxDisplayedNumber - GamePage.minDisplayedNumber + 1), 340);
+        65 + SCORE_METER_HEIGHT - (SCORE_METER_HEIGHT - 25) * (GameModel.instance.currentLevel + 1 - GamePage.minDisplayedNumber + 1)/(GamePage.maxDisplayedNumber - GamePage.minDisplayedNumber + 1), SCORE_METER_HEIGHT);
     }
-    GamePage.scoreScale.progressMeter.height = 315 * (GameModel.instance.currentScore - GamePage.minDisplayedNumber + 1)/(GamePage.maxDisplayedNumber - GamePage.minDisplayedNumber + 1);
-    GamePage.scoreScale.progressMeter.position.y = 365 - GamePage.scoreScale.progressMeter.height;
-    GamePage.dosageScale.progressMeter.width = 300 * GameModel.instance.clicksCount/GameModel.MAX_DOSE;
+    GamePage.scoreScale.progressMeter.height = SCORE_METER_HEIGHT * (GameModel.instance.currentScore - GamePage.minDisplayedNumber + 1)/(GamePage.maxDisplayedNumber - GamePage.minDisplayedNumber + 1);
+    GamePage.scoreScale.progressMeter.position.y = SCORE_METER_HEIGHT + 62 - GamePage.scoreScale.progressMeter.height;
+    GamePage.dosageScale.progressMeter.width = (STAGE_SCALE - 125) * GameModel.instance.clicksCount/GameModel.MAX_DOSE;
   }
 
   private static navigateToLogin(event:any):void{
@@ -84,7 +84,7 @@ export class GamePage {
   public static scoreText:PIXI.Text = new PIXI.Text("Current score: ");
   public static yourTurnText:PIXI.Text = new PIXI.Text("YOUR TURN !");
 
-  protected createChildren():void {
+  protected createChildren():void { //Here
     GamePage.stage.interactionManager = GameItemsManager.instance = new GameItemsManager();
     GameController.instance = new GameController();
     GameModel.instance = new GameModel();
@@ -93,18 +93,18 @@ export class GamePage {
     GamePage.maxDisplayedNumber = Math.max(5, GameModel.instance.currentScore);
     GamePage.minDisplayedNumber = Math.max(1, GamePage.maxDisplayedNumber - 10);
 
-    let progressMeter:PIXI.Sprite = Scale.createMeter(20, 30, 40, 340);
-    let title:PIXI.Text = Utils.createAndPositionText(10, 5, "Level");
-    let progressMeterScale:Array<PIXI.Text> = Scale.populateMeterScale(Utils.createArrayForMeter(GamePage.minDisplayedNumber, GamePage.maxDisplayedNumber), 65, 30);
-    GamePage.scoreScale = Scale.create(10, 70, 110, 380, progressMeter, title, progressMeterScale);
-    GamePage.scoreScale.progressMeter.height = 315 * (GameModel.instance.currentScore - GamePage.minDisplayedNumber + 1)/(GamePage.maxDisplayedNumber - GamePage.minDisplayedNumber + 1);
-    GamePage.scoreScale.progressMeter.position.y = 365 - GamePage.scoreScale.progressMeter.height;
+    let progressMeter:PIXI.Sprite = Scale.createMeter(53, 65, 28, SCORE_METER_HEIGHT); //Here
+    let title:PIXI.Text = Utils.createAndPositionText(5, 5, "Level");
+    let progressMeterScale:Array<PIXI.Text> = Scale.populateMeterScale(Utils.createArrayForMeter(GamePage.minDisplayedNumber, GamePage.maxDisplayedNumber), 95, 90);
+    GamePage.scoreScale = Scale.create(35, 30, 165, SCORE_SCALE_HEIGHT - 25, progressMeter, title, progressMeterScale);
+    GamePage.scoreScale.progressMeter.height = SCORE_METER_HEIGHT * (GameModel.instance.currentScore - GamePage.minDisplayedNumber + 1)/(GamePage.maxDisplayedNumber - GamePage.minDisplayedNumber + 1);
+    GamePage.scoreScale.progressMeter.position.y = SCORE_METER_HEIGHT + 62 - GamePage.scoreScale.progressMeter.height;
     GamePage.scoreScale.addToStage(GamePage.stageContainer);
 
-    progressMeter = Scale.createMeter(20, 30, 315, 40);
-    title = Utils.createAndPositionText(30, 5, "Done");
-    GamePage.dosageScale = Scale.create(20, 550, 380, 80, progressMeter, title);
-    GamePage.dosageScale.progressMeter.width = 310 * GameModel.instance.clicksCount/GameModel.MAX_DOSE;
+    progressMeter = Scale.createMeter(30, 50, STAGE_SCALE - 125, 30);
+    title = Utils.createAndPositionText(5, 5, "Done");
+    GamePage.dosageScale = Scale.create(35, STAGE_SCALE - 180, STAGE_SCALE - 55, 105, progressMeter, title);
+    GamePage.dosageScale.progressMeter.width = (STAGE_SCALE - 125) * GameModel.instance.clicksCount/GameModel.MAX_DOSE;
     GamePage.dosageScale.addToStage(GamePage.stageContainer);
 
     GamePage.stageContainer.addChild(GamePage.overlay);
@@ -174,13 +174,13 @@ export class GamePage {
     console.log('ionViewLoaded');
   }
 
-  private static createStageAndRenderer(stageWidth:number = 650, stageHeight:number = 650):void {
+  private static createStageAndRenderer(stageWidth:number = STAGE_SCALE, stageHeight:number = STAGE_SCALE):void { //Here
     console.log('createStageAndRenderer');
     GamePage.overlay = PIXI.Sprite.fromImage('assets/Overlay.bmp');
     GamePage.overlay.position = new PIXI.Point(0,0);
-    GamePage.overlay.width = 650;
-    GamePage.overlay.height = 650;
-    GamePage.overlay.alpha = 0.3;
+    GamePage.overlay.width = stageWidth;
+    GamePage.overlay.height = stageHeight;
+    GamePage.overlay.alpha = 0.0;
     GamePage.overlay.visible = false;
     GamePage.stage = null;
     if (!GamePage.stage){
@@ -242,10 +242,13 @@ class Scale extends PIXI.DisplayObjectContainer{
     let textArray:Array<string> = new Array<string>();
     if(typeof text === "string") {textArray.push(text);}
     else {textArray = text;}
+    console.log("titleText", textArray);
+    //console.log("titleText", textArray);
     for (let i:number = 0; i < textArray.length; i++){
+      console.log(textArray[i]);
       let titleText:PIXI.Text = new PIXI.Text(textArray[i]);
       titleText.position.x = textX;
-      titleText.position.y = textY + i*((340 - textY)/textArray.length);//i*63;  //Here
+      titleText.position.y = textY + i * ((SCORE_METER_HEIGHT - 25)/textArray.length);//i*63;  //Here
       title.push(titleText);
     }
 
@@ -270,12 +273,13 @@ class Scale extends PIXI.DisplayObjectContainer{
     console.log("updateMeterScale");
     for (let i:number = 0; i < array.length; i++){
       array[i].position.x = textX;
-      array[i].position.y = textY + i*((meterHeight - textY)/array.length); //Here + 68
+      array[i].position.y = textY + i*((meterHeight - 25)/array.length); //Here + 68
     }
   }
 
   public addToStage(container:PIXI.DisplayObjectContainer):void{
     container.addChild(this);
+    this.background.alpha = 0.3;
     this.addChild(this.background);
     this.addChild(this.progressMeter);
     this.addChild(this.title);
@@ -284,3 +288,9 @@ class Scale extends PIXI.DisplayObjectContainer{
     }
   }
 }
+
+const STAGE_SCALE:number = 785;
+
+const SCORE_SCALE_HEIGHT:number = 575;
+
+const SCORE_METER_HEIGHT:number = 425;

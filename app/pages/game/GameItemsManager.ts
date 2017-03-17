@@ -79,8 +79,9 @@ export class GameItemsManager extends PIXI.InteractionManager {
 
   protected createBackground(imagePath:string):PIXI.Sprite {
     let background:PIXI.Sprite = new PIXI.Sprite(PIXI.Texture.fromImage(imagePath));
-    background.position.x = -150;
+    background.position.x = 0;//-150;
     background.position.y = 0;
+    console.log("background.scale ", background.scale);
     GamePage.stageContainer.addChild(background);
     return background;
   }
@@ -96,8 +97,8 @@ export class GameItemsManager extends PIXI.InteractionManager {
       for (let j: number = 0; j < GameModel.instance.numOfItems/4; j++) {
         let offsetY: number = j * 115;
         let gameItem: GameItem = new GameItem();
-        gameItem.position.x = 140 + offsetX;
-        gameItem.position.y = 80 + offsetY;
+        gameItem.position.x = 270 + offsetX;
+        gameItem.position.y = 95 + offsetY;
         gameItem.id = this.interactiveItems.length;
         this.interactiveItems.push(gameItem);
         GamePage.stageContainer.addChild(gameItem);
