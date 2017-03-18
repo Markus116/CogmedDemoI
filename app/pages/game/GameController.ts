@@ -64,7 +64,7 @@ export class GameController {
       GameModel.timeOuts.push(setTimeout(function(){GameItemsManager.instance.interactiveItems[GameModel.instance.itemSequence[i]].highlight();}, i*2000 + 1000));
     }
     GameModel.timeOuts.push(setTimeout(function(){
-      GameItemsManager.instance.turnItemsOn();
+      GameItemsManager.instance.target.view.dispatchEvent(new Event('switchItemsState'));
     }, GameModel.instance.itemSequence.length * 2000 /*+ 1000*/));
   }
 

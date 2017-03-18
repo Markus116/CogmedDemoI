@@ -34,9 +34,10 @@ export class GamePage {
     }
   }
 
+  //ToDO: Either get rid of this either fix the process trial bug, related to this function's usage
   public static DEFAULT_CLICK_HANDLER:any = function(event:any){
-    GameController.instance.processTrial(event);
-    if(GamePage.scoreText.visible) {GamePage.scoreText.setText("Current score: " + GameModel.instance.currentScore);}
+    //GameController.instance.processTrial(event);
+    //if(GamePage.scoreText.visible) {GamePage.scoreText.setText("Current score: " + GameModel.instance.currentScore);}
   };
 
   public static updateMetersHandler(event:any):void{
@@ -83,6 +84,7 @@ export class GamePage {
   public static clickHandler:any = GamePage.DEFAULT_CLICK_HANDLER;
   public static scoreText:PIXI.Text = new PIXI.Text("Current score: ");
   public static yourTurnText:PIXI.Text = new PIXI.Text("YOUR TURN !");
+  public static goButton:PIXI.Sprite = PIXI.Sprite.fromImage("assets/goButton.png");
 
   protected createChildren():void {
     GamePage.stage.interactionManager = GameItemsManager.instance = new GameItemsManager();
@@ -118,6 +120,23 @@ export class GamePage {
     GamePage.yourTurnText.position = new PIXI.Point(GamePage.overlay.width/2, (GamePage.overlay.height - 50)/2);
     GamePage.yourTurnText.visible = false;
     GamePage.stageContainer.addChild(GamePage.yourTurnText);
+
+    GamePage.goButton.position = new PIXI.Point(GamePage.overlay.width/2 + 40, GamePage.overlay.height - 200);
+    GamePage.goButton.visible = false;
+    GamePage.goButton.setInteractive(true); //Does not work, although tutorial says it should
+    GamePage.stage.interactionManager.interactiveItems.push(GamePage.goButton); //ToDO: Get rid of this when find the solution to the line above
+    GamePage.goButton.mousedown = GamePage.goButton.touchstart = function(data) {
+      console.log("GO_BUTTON_CLICK");
+      GamePage.goButton.visible = false;
+      GamePage.yourTurnText.visible = true;
+      setTimeout(function(){
+        GamePage.yourTurnText.visible = false;
+        GamePage.overlay.visible = false;
+        GameItemsManager.instance.turnItemsOn();
+      },1000);
+    };
+    GamePage.stageContainer.addChild(GamePage.goButton);
+
     GamePage.adjustDimensions();
     GamePage.requestFrameHandles = [];
 
@@ -127,15 +146,18 @@ export class GamePage {
     window.addEventListener('resize', GamePage.onResize, true);
   }
 
-  public static switchOverlay():void{
+  public static switchOverlay():void{ //Here
+    console.log("switchOverlay");
     if(GamePage.overlay.visible){
-      GamePage.yourTurnText.visible = true;
       setTimeout(function(){
         GamePage.yourTurnText.visible = false;
-        GamePage.overlay.visible = false;
+        GamePage.goButton.visible = true;
       },1000);
     }
-    else GamePage.overlay.visible = true;
+    else {
+      GamePage.overlay.visible = true;
+      GamePage.goButton.visible = false;
+    }
   }
 
   private static requestFrameHandles:Array<number> = [];
@@ -163,6 +185,7 @@ export class GamePage {
     GamePage.renderer.view.removeEventListener('switchItemsState', GamePage.switchOverlay, true);
     GamePage.renderer.view.removeEventListener('navigateToLogin', GamePage.navigateToLogin, true);
     GamePage.renderer.view.removeEventListener('updateMeters', GamePage.updateMetersHandler, true);
+    GameItemsManager.instance.turnItemsOff(0);
     window.removeEventListener('resize', GamePage.onResize, true);
     GamePage.cancelAnimationFrames();
   }

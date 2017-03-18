@@ -52,13 +52,12 @@ export class GameItemsManager extends PIXI.InteractionManager {
     console.log("turnItemsOn");
     let scope:any = this;
     setTimeout(function(){
-      for(let i:number = 0; i < scope.interactiveItems.length; i++){
+      for(let i:number = 0; i < scope.interactiveItems.length - 1; i++){
         scope.interactiveItems[i].registerEvents();
       }
       scope.target.view.addEventListener('mousedown', GamePage.clickHandler, true);
       scope.target.view.addEventListener('touchstart', GamePage.clickHandler, true);
     }, 1000);
-    this.target.view.dispatchEvent(new Event('switchItemsState'));
   }
 
   public turnItemsOff(delay:number = 1000):void{
@@ -66,7 +65,7 @@ export class GameItemsManager extends PIXI.InteractionManager {
     this.target.view.removeEventListener('mousedown', GamePage.clickHandler, true);
     this.target.view.removeEventListener('touchstart', GamePage.clickHandler, true);
     let scope:any = this;
-    for(let i:number = 0; i < this.interactiveItems.length; i++){
+    for(let i:number = 0; i < this.interactiveItems.length - 1; i++){
       GameModel.timeOuts.push(setTimeout(function():void{
         scope.interactiveItems[i].clearEvents();
         scope.interactiveItems[i].setTexture(scope.interactiveItems[i].upState);
@@ -79,7 +78,7 @@ export class GameItemsManager extends PIXI.InteractionManager {
 
   protected createBackground(imagePath:string):PIXI.Sprite {
     let background:PIXI.Sprite = new PIXI.Sprite(PIXI.Texture.fromImage(imagePath));
-    background.position.x = 0;//-150;
+    background.position.x = 0;
     background.position.y = 0;
     GamePage.stageContainer.addChild(background);
     return background;
