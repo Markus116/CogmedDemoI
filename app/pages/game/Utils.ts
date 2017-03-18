@@ -4,7 +4,7 @@ export class Utils {
   public static createArrayForMeter(minNumber:number, maxNumber:number):Array<any>{
     let array:Array<string> = [];
     for(let i:number = maxNumber - minNumber; i >= 0; i--){
-      array.push("-" + (i + minNumber));
+      array.push("" + (i + minNumber));
     }
     return array;
   }

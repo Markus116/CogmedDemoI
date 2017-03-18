@@ -95,7 +95,7 @@ export class GamePage {
 
     let progressMeter:PIXI.Sprite = Scale.createMeter(53, 65, 28, SCORE_METER_HEIGHT); //Here
     let title:PIXI.Text = Utils.createAndPositionText(5, 5, "Level");
-    let progressMeterScale:Array<PIXI.Text> = Scale.populateMeterScale(Utils.createArrayForMeter(GamePage.minDisplayedNumber, GamePage.maxDisplayedNumber), 95, 90);
+    let progressMeterScale:Array<PIXI.Text> = Scale.populateMeterScale(Utils.createArrayForMeter(GamePage.minDisplayedNumber, GamePage.maxDisplayedNumber), 100, 90);
     GamePage.scoreScale = Scale.create(35, 30, 165, SCORE_SCALE_HEIGHT - 25, progressMeter, title, progressMeterScale);
     GamePage.scoreScale.progressMeter.height = SCORE_METER_HEIGHT * (GameModel.instance.currentScore - GamePage.minDisplayedNumber + 1)/(GamePage.maxDisplayedNumber - GamePage.minDisplayedNumber + 1);
     GamePage.scoreScale.progressMeter.position.y = SCORE_METER_HEIGHT + 62 - GamePage.scoreScale.progressMeter.height;
@@ -107,10 +107,13 @@ export class GamePage {
     GamePage.dosageScale.progressMeter.width = (STAGE_SCALE - 125) * GameModel.instance.clicksCount/GameModel.MAX_DOSE;
     GamePage.dosageScale.addToStage(GamePage.stageContainer);
 
+    let exerciseTitle:PIXI.Text = Utils.createAndPositionText(232, 35, "Grid");
+
     GamePage.stageContainer.addChild(GamePage.overlay);
     GamePage.scoreText.setText("Current score: " + GameModel.instance.currentScore);
     //GamePage.scoreText.visible = false; //ScoreText is for debug purpose
     GamePage.stageContainer.addChild(GamePage.scoreText);
+    GamePage.stageContainer.addChild(exerciseTitle);
     GamePage.yourTurnText.setText("YOUR TURN !");
     GamePage.yourTurnText.position = new PIXI.Point((GamePage.overlay.width - 100)/2, (GamePage.overlay.height - 50)/2);
     GamePage.yourTurnText.visible = false;
@@ -180,7 +183,7 @@ export class GamePage {
     GamePage.overlay.position = new PIXI.Point(0,0);
     GamePage.overlay.width = stageWidth;
     GamePage.overlay.height = stageHeight;
-    GamePage.overlay.alpha = 0.0;
+    GamePage.overlay.alpha = 0.3;
     GamePage.overlay.visible = false;
     GamePage.stage = null;
     if (!GamePage.stage){
@@ -242,8 +245,6 @@ class Scale extends PIXI.DisplayObjectContainer{
     let textArray:Array<string> = new Array<string>();
     if(typeof text === "string") {textArray.push(text);}
     else {textArray = text;}
-    console.log("titleText", textArray);
-    //console.log("titleText", textArray);
     for (let i:number = 0; i < textArray.length; i++){
       console.log(textArray[i]);
       let titleText:PIXI.Text = new PIXI.Text(textArray[i]);
@@ -279,8 +280,8 @@ class Scale extends PIXI.DisplayObjectContainer{
 
   public addToStage(container:PIXI.DisplayObjectContainer):void{
     container.addChild(this);
-    this.background.alpha = 0.3;
-    this.addChild(this.background);
+    this.background.alpha = 0.0;
+    //this.addChild(this.background); //ToDo: Either rework the scale background for this design, or get rid of it
     this.addChild(this.progressMeter);
     this.addChild(this.title);
     if (this.progressMeterScale){
