@@ -35,8 +35,8 @@ export class GamePage {
   }
 
   public static DEFAULT_CLICK_HANDLER:any = function(event:any){
-    GameController.instance.processTrial(event);
-    if(GamePage.scoreText.visible) {GamePage.scoreText.setText("Current score: " + GameModel.instance.currentScore);}
+    // GameController.instance.processTrial(event);
+    // if(GamePage.scoreText.visible) {GamePage.scoreText.setText("Current score: " + GameModel.instance.currentScore);}
   };
 
   public static updateMetersHandler(event:any):void{
@@ -160,6 +160,7 @@ export class GamePage {
     GamePage.renderer.view.removeEventListener('switchItemsState', GamePage.switchOverlay, true);
     GamePage.renderer.view.removeEventListener('navigateToLogin', GamePage.navigateToLogin, true);
     GamePage.renderer.view.removeEventListener('updateMeters', GamePage.updateMetersHandler, true);
+    GameItemsManager.instance.turnItemsOff(0);
     window.removeEventListener('resize', GamePage.onResize, true);
     GamePage.cancelAnimationFrames();
   }

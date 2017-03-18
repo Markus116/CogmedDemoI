@@ -1,5 +1,7 @@
 import {PIXI}  from './pixi';
 import {GameModel} from "./GameModel";
+import {GamePage} from "./GamePage";
+import {GameController} from "./GameController";
 
 export class GameItem extends PIXI.Sprite {
   constructor(){
@@ -18,6 +20,8 @@ export class GameItem extends PIXI.Sprite {
       //console.log('mousedown');
       GameModel.clickedItem = this.id;
       this.setTexture(this.downState);
+      GameController.instance.processTrial(event);
+      if(GamePage.scoreText.visible) {GamePage.scoreText.setText("Current score: " + GameModel.instance.currentScore);}
     };
 
     // set the mouseup and touchend callback..
