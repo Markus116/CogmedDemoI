@@ -81,7 +81,6 @@ export class GameItemsManager extends PIXI.InteractionManager {
     let background:PIXI.Sprite = new PIXI.Sprite(PIXI.Texture.fromImage(imagePath));
     background.position.x = 0;//-150;
     background.position.y = 0;
-    console.log("background.scale ", background.scale);
     GamePage.stageContainer.addChild(background);
     return background;
   }

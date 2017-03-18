@@ -39,7 +39,7 @@ export class GamePage {
     if(GamePage.scoreText.visible) {GamePage.scoreText.setText("Current score: " + GameModel.instance.currentScore);}
   };
 
-  public static updateMetersHandler(event:any):void{ //Here
+  public static updateMetersHandler(event:any):void{
     if(GameModel.instance.currentLevel >= 4){
       if(GameModel.instance.currentLevel >= GamePage.maxDisplayedNumber){
         GamePage.maxDisplayedNumber = GameModel.instance.currentLevel + 1;
@@ -84,7 +84,7 @@ export class GamePage {
   public static scoreText:PIXI.Text = new PIXI.Text("Current score: ");
   public static yourTurnText:PIXI.Text = new PIXI.Text("YOUR TURN !");
 
-  protected createChildren():void { //Here
+  protected createChildren():void {
     GamePage.stage.interactionManager = GameItemsManager.instance = new GameItemsManager();
     GameController.instance = new GameController();
     GameModel.instance = new GameModel();
@@ -93,9 +93,9 @@ export class GamePage {
     GamePage.maxDisplayedNumber = Math.max(5, GameModel.instance.currentScore);
     GamePage.minDisplayedNumber = Math.max(1, GamePage.maxDisplayedNumber - 10);
 
-    let progressMeter:PIXI.Sprite = Scale.createMeter(53, 65, 28, SCORE_METER_HEIGHT); //Here
+    let progressMeter:PIXI.Sprite = Scale.createMeter(53, 65, 28, SCORE_METER_HEIGHT);
     let title:PIXI.Text = Utils.createAndPositionText(5, 5, "Level");
-    let progressMeterScale:Array<PIXI.Text> = Scale.populateMeterScale(Utils.createArrayForMeter(GamePage.minDisplayedNumber, GamePage.maxDisplayedNumber), 100, 90);
+    let progressMeterScale:Array<PIXI.Text> = Scale.populateMeterScale(Utils.createArrayForMeter(GamePage.minDisplayedNumber, GamePage.maxDisplayedNumber), 110, 90);
     GamePage.scoreScale = Scale.create(35, 30, 165, SCORE_SCALE_HEIGHT - 25, progressMeter, title, progressMeterScale);
     GamePage.scoreScale.progressMeter.height = (SCORE_METER_HEIGHT - 50) * (GameModel.instance.currentScore - GamePage.minDisplayedNumber + 1)/(GamePage.maxDisplayedNumber - GamePage.minDisplayedNumber + 1);
     GamePage.scoreScale.progressMeter.position.y = SCORE_METER_HEIGHT + 62 - GamePage.scoreScale.progressMeter.height;
@@ -109,13 +109,13 @@ export class GamePage {
 
     let exerciseTitle:PIXI.Text = Utils.createAndPositionText(232, 35, "Grid");
 
+    GamePage.stageContainer.addChild(exerciseTitle);
     GamePage.stageContainer.addChild(GamePage.overlay);
     GamePage.scoreText.setText("Current score: " + GameModel.instance.currentScore);
     //GamePage.scoreText.visible = false; //ScoreText is for debug purpose
     GamePage.stageContainer.addChild(GamePage.scoreText);
-    GamePage.stageContainer.addChild(exerciseTitle);
     GamePage.yourTurnText.setText("YOUR TURN !");
-    GamePage.yourTurnText.position = new PIXI.Point((GamePage.overlay.width - 100)/2, (GamePage.overlay.height - 50)/2);
+    GamePage.yourTurnText.position = new PIXI.Point(GamePage.overlay.width/2, (GamePage.overlay.height - 50)/2);
     GamePage.yourTurnText.visible = false;
     GamePage.stageContainer.addChild(GamePage.yourTurnText);
     GamePage.adjustDimensions();
@@ -142,7 +142,7 @@ export class GamePage {
 
   ionViewDidEnter(){
     console.log('ionViewDidEnter');
-    GamePage.createStageAndRenderer(document.getElementById('gameContainer').clientWidth, document.getElementById('gameContainer').clientHeight);
+    GamePage.createStageAndRenderer();
     document.getElementById('gameContainer').appendChild(GamePage.renderer.view);
 
     this.createChildren();
@@ -177,7 +177,7 @@ export class GamePage {
     console.log('ionViewLoaded');
   }
 
-  private static createStageAndRenderer(stageWidth:number = STAGE_SCALE, stageHeight:number = STAGE_SCALE):void { //Here
+  private static createStageAndRenderer(stageWidth:number = STAGE_SCALE, stageHeight:number = STAGE_SCALE):void {
     console.log('createStageAndRenderer');
     GamePage.overlay = PIXI.Sprite.fromImage('assets/Overlay.bmp');
     GamePage.overlay.position = new PIXI.Point(0,0);
@@ -246,10 +246,9 @@ class Scale extends PIXI.DisplayObjectContainer{
     if(typeof text === "string") {textArray.push(text);}
     else {textArray = text;}
     for (let i:number = 0; i < textArray.length; i++){
-      console.log(textArray[i]);
       let titleText:PIXI.Text = new PIXI.Text(textArray[i]);
       titleText.position.x = textX;
-      titleText.position.y = textY + i * ((SCORE_METER_HEIGHT - 25)/textArray.length);//i*63;  //Here
+      titleText.position.y = textY + i * ((SCORE_METER_HEIGHT - 25)/textArray.length);
       title.push(titleText);
     }
 
@@ -274,7 +273,7 @@ class Scale extends PIXI.DisplayObjectContainer{
     console.log("updateMeterScale");
     for (let i:number = 0; i < array.length; i++){
       array[i].position.x = textX;
-      array[i].position.y = textY + i*((meterHeight - 25)/array.length); //Here + 68
+      array[i].position.y = textY + i*((meterHeight - 25)/array.length);
     }
   }
 
