@@ -44,28 +44,28 @@ export class GamePage {
       if(GameModel.instance.currentLevel >= GamePage.maxDisplayedNumber){
         GamePage.maxDisplayedNumber = GameModel.instance.currentLevel + 1;
         console.log("Adding the element to the progressMeterScale");
-        Scale.addElementToMeter(GamePage.scoreScale.progressMeterScale, "-" + GamePage.maxDisplayedNumber);
+        Scale.addElementToMeter(GamePage.scoreScale.progressMeterScale, "" + GamePage.maxDisplayedNumber);
       } else if(GameModel.instance.currentLevel < GamePage.maxDisplayedNumber - 1){
         console.log("Removing the element from the progressMeterScale");
         GamePage.maxDisplayedNumber = GameModel.instance.currentLevel + 1;
         Scale.removeElementFromMeter(GamePage.scoreScale.progressMeterScale);
       }
-      //
-      if(GamePage.maxDisplayedNumber - GamePage.minDisplayedNumber > 10) {
-        GamePage.minDisplayedNumber = GamePage.maxDisplayedNumber - 10;
+      let difference:number = 4;// can be 10;
+      if(GamePage.maxDisplayedNumber - GamePage.minDisplayedNumber > difference) {
+        GamePage.minDisplayedNumber = GamePage.maxDisplayedNumber - difference;
         GamePage.scoreScale.progressMeterScale[GamePage.scoreScale.progressMeterScale.length - 1].parent.removeChild(GamePage.scoreScale.progressMeterScale[GamePage.scoreScale.progressMeterScale.length - 1]);
         GamePage.scoreScale.progressMeterScale.pop();
-      } else if(GamePage.maxDisplayedNumber - GamePage.minDisplayedNumber != 10 && GamePage.minDisplayedNumber != 1){
-        GamePage.minDisplayedNumber = Math.max(GamePage.maxDisplayedNumber - 10, 1);
+      } else if(GamePage.maxDisplayedNumber - GamePage.minDisplayedNumber != difference && GamePage.minDisplayedNumber != 1){
+        GamePage.minDisplayedNumber = Math.max(GamePage.maxDisplayedNumber - difference, 1);
         // add element to the bottom of the scale
-        GamePage.scoreScale.progressMeterScale.push(new PIXI.Text("-" + GamePage.minDisplayedNumber));
+        GamePage.scoreScale.progressMeterScale.push(new PIXI.Text("" + GamePage.minDisplayedNumber));
         GamePage.scoreScale.progressMeterScale[1].parent.addChild(GamePage.scoreScale.progressMeterScale[GamePage.scoreScale.progressMeterScale.length - 1]);
       }
 
       Scale.updateMeterScale(GamePage.scoreScale.progressMeterScale,  GamePage.scoreScale.progressMeterScale[1].position.x,
         65 + SCORE_METER_HEIGHT - (SCORE_METER_HEIGHT - 25) * (GameModel.instance.currentLevel + 1 - GamePage.minDisplayedNumber + 1)/(GamePage.maxDisplayedNumber - GamePage.minDisplayedNumber + 1), SCORE_METER_HEIGHT);
     }
-    GamePage.scoreScale.progressMeter.height = SCORE_METER_HEIGHT * (GameModel.instance.currentScore - GamePage.minDisplayedNumber + 1)/(GamePage.maxDisplayedNumber - GamePage.minDisplayedNumber + 1);
+    GamePage.scoreScale.progressMeter.height = (SCORE_METER_HEIGHT - 50) * (GameModel.instance.currentScore - GamePage.minDisplayedNumber + 1)/(GamePage.maxDisplayedNumber - GamePage.minDisplayedNumber + 1);
     GamePage.scoreScale.progressMeter.position.y = SCORE_METER_HEIGHT + 62 - GamePage.scoreScale.progressMeter.height;
     GamePage.dosageScale.progressMeter.width = (STAGE_SCALE - 125) * GameModel.instance.clicksCount/GameModel.MAX_DOSE;
   }
@@ -97,7 +97,7 @@ export class GamePage {
     let title:PIXI.Text = Utils.createAndPositionText(5, 5, "Level");
     let progressMeterScale:Array<PIXI.Text> = Scale.populateMeterScale(Utils.createArrayForMeter(GamePage.minDisplayedNumber, GamePage.maxDisplayedNumber), 100, 90);
     GamePage.scoreScale = Scale.create(35, 30, 165, SCORE_SCALE_HEIGHT - 25, progressMeter, title, progressMeterScale);
-    GamePage.scoreScale.progressMeter.height = SCORE_METER_HEIGHT * (GameModel.instance.currentScore - GamePage.minDisplayedNumber + 1)/(GamePage.maxDisplayedNumber - GamePage.minDisplayedNumber + 1);
+    GamePage.scoreScale.progressMeter.height = (SCORE_METER_HEIGHT - 50) * (GameModel.instance.currentScore - GamePage.minDisplayedNumber + 1)/(GamePage.maxDisplayedNumber - GamePage.minDisplayedNumber + 1);
     GamePage.scoreScale.progressMeter.position.y = SCORE_METER_HEIGHT + 62 - GamePage.scoreScale.progressMeter.height;
     GamePage.scoreScale.addToStage(GamePage.stageContainer);
 
